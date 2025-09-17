@@ -6,29 +6,65 @@ async function fetchData() {
 
     let runtime = 0
     for (let i = 0; i < res2.length; i++) {
-        const song = res2[i].track
-        const ListArts = song.album.artists
-        const songsDivs = document.createElement("div")
-        songsDivs.classList.add("song")
-        const spanSongs = document.createElement("h3")
-        spanSongs.textContent = song.name
-        songsDivs.appendChild(spanSongs)
+        const tracks = document.createElement("li");
+        tracks.classList.add("track-item");
+        const songs = res2[i].track
+        const ListArts = songs.artists
+        const ListImg = songs.album.images
 
-        const authorSongs = document.createElement("span")
+        const number = document.createElement("div")
+        number.classList.add("track-number")
+        number.textContent = i + 1
+        const mainSongs = document.createElement("div")
+        mainSongs.classList.add("track-main")
+        const infoSongs = document.createElement("div")
+        infoSongs.classList.add("track-info")
+        const nameSongs = document.createElement("div")
+        nameSongs.classList.add("track-name")
+        nameSongs.textContent = songs.name
+
+        const authorSongs = document.createElement("div")
         const authorNames = ListArts.map(artist => artist.name)
         authorSongs.textContent = authorNames
-        songsDivs.appendChild(authorSongs)
+        const albumSongs = document.createElement("div")
+        albumSongs.textContent = songs.album.name
 
+        const durationSongs = document.createElement("div")
+        durationSongs.classList.add("track-meta");
+        const timeSong = document.createElement("div")
+        timeSong.classList.add("duration")
+        const time = songs.duration_ms
+        timeSong.textContent = (time / 60000).toFixed(2)
 
-        const albumSongs = document.createElement("h5")
-        albumSongs.textContent = song.album.name
-        songsDivs.appendChild(albumSongs)
-        songsContaner.appendChild(songsDivs)
+        const popularSongs = document.createElement("div")
+        popularSongs.classList.add("popularity");
+        popularSongs.textContent = "♪ " + songs.popularity
         
+        const imageSongs = document.createElement("img")
+        imageSongs.classList.add("album-art")
+        const imgTrack = ListImg.map(Image => Image.url)
+        imageSongs.src = imgTrack[0]
+
+        durationSongs.appendChild(timeSong)
+        durationSongs.appendChild(popularSongs)
+        infoSongs.appendChild(nameSongs)
+        infoSongs.appendChild(authorSongs)
+        infoSongs.appendChild(albumSongs)
+        mainSongs.appendChild(imageSongs)
+        mainSongs.appendChild(infoSongs)
+        tracks.appendChild(number)
+        tracks.appendChild(mainSongs)
+        tracks.appendChild(durationSongs)
+        songsContaner.appendChild(tracks)
+        runtime += time;
     }
+    console.log(runtime)
+    const hours = Math.floor(runtime / 3600000)
+    const minutes = Math.floor((runtime % 3600000) / 100000)
     const string = document.createElement("div")
     string.classList.add("stat")
-    string.textContent = "Треков:" + res2.length
+    string.textContent = "Треков: " + res2.length
+     + "  Общая длительность: " + hours + " ч " + minutes + " мин "
     statesContaner.appendChild(string);
 
 }
